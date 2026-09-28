@@ -1,0 +1,6 @@
+@WebApplication1_HostAddress = https://localhost:7209
+
+GET {{WebApplication1_HostAddress}}/products
+Accept: application/json
+
+###
