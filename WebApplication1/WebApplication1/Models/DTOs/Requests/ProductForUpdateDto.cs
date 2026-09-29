@@ -1,9 +1,14 @@
-﻿namespace WebApplication1.Models.DTOs.Requests
+using System.ComponentModel.DataAnnotations;
+
+namespace WebApplication1.Models.DTOs.Requests
 {
     public class ProductForUpdateDto
     {
+        [Required(ErrorMessage = "El nombre es obligatorio.")]
+        [StringLength(100, MinimumLength = 3, ErrorMessage = "El nombre tiene que tener entre 3 y 100 caracteres.")]
         public required string Name { get; set; }
-        public decimal Price { get; set; }
 
+        [Range(0.01, double.MaxValue, ErrorMessage = "El precio tiene que ser mayor que cero.")]
+        public decimal Price { get; set; }
     }
 }

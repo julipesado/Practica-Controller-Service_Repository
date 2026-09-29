@@ -1,3 +1,7 @@
+using WebApplication1.Repositories.Implementations;
+using WebApplication1.Repositories.Interfaces;
+using WebApplication1.Services.Implementations;
+using WebApplication1.Services.Interfaces;
 
 namespace WebApplication1
 {
@@ -14,6 +18,10 @@ namespace WebApplication1
             builder.Services.AddOpenApi();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddScoped<IProductRepository, ProductRepository>();
+            builder.Services.AddScoped<IProductService, ProductService>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

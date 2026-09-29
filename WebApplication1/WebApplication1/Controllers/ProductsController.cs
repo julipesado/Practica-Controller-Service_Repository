@@ -1,15 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WebApplication1.Exceptions;
 using WebApplication1.Models.DTOs.Requests;
 using WebApplication1.Services.Interfaces;
-using WebApplication1.Services.Implementations;
 
 namespace WebApplication1.Controllers
 {
     [ApiController]
-    [Route("products")]
+    [Route("api/products")]
     public class ProductsController : ControllerBase
     {
-        private readonly IProductService _service = new ProductService();
+        private readonly IProductService _service;
+
+        public ProductsController(IProductService service)
+        {
+            _service = service;
+        }
 
         [HttpGet]
         public IActionResult GetAllProducts()
@@ -30,8 +35,15 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public IActionResult CreateProduct([FromBody] ProductForCreateDto dto)
         {
-            var created = _service.CreateProduct(dto);
-            return Created($"/products/{created.Id}", created);
+            try
+            {
+                var created = _service.CreateProduct(dto);
+                return Created($"/api/products/{created.Id}", created);
+            }
+            catch (DuplicateProductNameException ex)
+            {
+                return Conflict(ex.Message);
+            }
         }
 
         [HttpPut("{id}")]
@@ -52,6 +64,20 @@ namespace WebApplication1.Controllers
 
             _service.DeleteProduct(id);
             return NoContent();
+        }
+
+        [HttpGet("search")]
+        public IActionResult SearchProducts([FromQuery] string name)
+        {
+            var products = _service.SearchProductsByName(name);
+            return Ok(products);
+        }
+
+        [HttpGet("stats")]
+        public IActionResult GetStats()
+        {
+            var stats = _service.GetStats();
+            return Ok(stats);
         }
     }
 }

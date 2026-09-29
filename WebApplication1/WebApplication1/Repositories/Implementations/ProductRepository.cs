@@ -49,5 +49,12 @@ namespace WebApplication1.Repositories.Implementations
         {
             _products.Remove(product);
         }
+
+        public List<Product> SearchProductsByName(string name)
+        {
+            return _products
+                .Where(p => p.Name.Contains(name, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
     }
 }
