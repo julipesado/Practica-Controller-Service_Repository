@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using WebApplication1.Data;
 using WebApplication1.Repositories.Implementations;
 using WebApplication1.Repositories.Interfaces;
 using WebApplication1.Services.Implementations;
@@ -18,6 +20,10 @@ namespace WebApplication1
             builder.Services.AddOpenApi();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            // Conexión a la base de datos (SQLite). La cadena está en appsettings.json
+            builder.Services.AddDbContext<ApplicationContext>(options =>
+                options.UseSqlite(builder.Configuration.GetConnectionString("ProductsDBConnectionString")));
 
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddScoped<IProductService, ProductService>();
